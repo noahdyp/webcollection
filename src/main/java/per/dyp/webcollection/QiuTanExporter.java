@@ -16,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -163,6 +162,30 @@ public class QiuTanExporter implements Exporter {
         }
 
         initPeiLv(sheet, rowIndex, cellIndex, match);
+
+        initJiShiBet365(sheet, rowIndex, cellIndex, match);
+    }
+
+    private void initJiShiBet365(XSSFSheet sheet, int rowIndex, int cellIndex, Match match) {
+        String[] jishi = match.getJiShiBet365();
+        XSSFRow row1 = sheet.getRow(rowIndex + 1);
+        CellRangeAddress craCal1 = new CellRangeAddress(rowIndex + 1, rowIndex + 2, cellIndex + 3, cellIndex + 3);
+        sheet.addMergedRegion(craCal1);
+        XSSFCell cal1 = row1.createCell(cellIndex + 3);
+        cal1.setCellValue(jishi[0]);
+        cal1.setCellStyle(styleMap.get("kaiLi"));
+
+        XSSFRow row2 = sheet.getRow(rowIndex + 3);
+        CellRangeAddress craCal2 = new CellRangeAddress(rowIndex + 3, rowIndex + 4, cellIndex + 3, cellIndex + 3);
+        sheet.addMergedRegion(craCal2);
+        XSSFCell cal2 = row2.createCell(cellIndex + 3);
+        cal2.setCellValue(jishi[1]);
+        cal2.setCellStyle(styleMap.get("kaiLi"));
+
+        XSSFRow row3 = sheet.getRow(rowIndex + 5);
+        XSSFCell cal3 = row3.createCell(cellIndex + 3);
+        cal3.setCellValue(jishi[2]);
+        cal3.setCellStyle(styleMap.get("kaiLi"));
     }
 
     private void initPeiLv(XSSFSheet sheet, int rowIndex, int cellIndex, Match match) {
@@ -236,11 +259,11 @@ public class QiuTanExporter implements Exporter {
             minKaiLi.setCellStyle(styleMap.get("kaiLi"));
         }
 
-        CellRangeAddress craCal = new CellRangeAddress(rowIndex + 1, rowIndex + 2, cellIndex + 3, cellIndex + 3);
-        sheet.addMergedRegion(craCal);
-        XSSFCell cal = kaiLi.createCell(cellIndex + 3, Cell.CELL_TYPE_STRING);
-        cal.setCellValue(getCal(minKaiLis));
-        cal.setCellStyle(styleMap.get("kaiLi"));
+        // CellRangeAddress craCal = new CellRangeAddress(rowIndex + 1, rowIndex + 2, cellIndex + 3, cellIndex + 3);
+        // sheet.addMergedRegion(craCal);
+        // XSSFCell cal = kaiLi.createCell(cellIndex + 3, Cell.CELL_TYPE_STRING);
+        // cal.setCellValue(getCal(minKaiLis));
+        // cal.setCellStyle(styleMap.get("kaiLi"));
 
     }
 
@@ -287,12 +310,13 @@ public class QiuTanExporter implements Exporter {
          * 
          * @1_3 id、、代码<br>
          * @4_6 初盘主和客赔率<br>
+         * 
          * @7-9 初盘主和客胜率<br>
-         * @10 初盘返还率<br>
-         * @11_13 即时主和客赔率<br>
-         * @14_16 即时主和客胜率<br>
-         * @17 即时返还率<br>
-         * @18_20 凯利指数
+         *      @10 初盘返还率<br>
+         *      @11_13 即时主和客赔率<br>
+         *      @14_16 即时主和客胜率<br>
+         *      @17 即时返还率<br>
+         *      @18_20 凯利指数
          */
         private Map<String, String[]> gameMap;
 
@@ -355,6 +379,22 @@ public class QiuTanExporter implements Exporter {
             return minKaiLiAll;
         }
 
+        public String[] getJiShiBet365() {
+            if (gameMap == null) {
+                return null;
+            }
+            String[] jishi365 = { "", "", "" };
+            int start = 10;
+            String[] params = gameMap.get("281");
+            if (params == null) {
+                return jishi365;
+            }
+            for (int i = 0; i < jishi365.length; i++) {
+                jishi365[i] = params[start + i];
+            }
+            return jishi365;
+        }
+
         public double[][] getPeiLv8888() {
             if (gameMap == null) {
                 return null;
@@ -370,7 +410,7 @@ public class QiuTanExporter implements Exporter {
             return getPeiLv(params8888);
         }
 
-        public double[][] getPeiLv(Collection<String[]> paramsList) {
+        private double[][] getPeiLv(Collection<String[]> paramsList) {
             if (params == null) {
                 return null;
             }
