@@ -1,0 +1,155 @@
+<assembly  
+    xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">  
+      
+    <!--   
+        1、“构建项目软件包” (打包)  
+          
+        2、查看更多配置请参考下面地址：  
+            http://maven.apache.org/plugins/maven-assembly-plugin/assembly.html  
+          
+        3、项目本配置说明  
+          
+            1、maven本版： apache-maven-3.0.5   
+              
+                http://mirror.bjtu.edu.cn/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.zip  
+                  
+            2、IDE本版： eclipse Kepler Release  
+                  
+                注意操作系统的 32位还是 64 位  
+                http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/R/eclipse-jee-kepler-R-win32-x86_64.zip  
+     -->  
+      
+    <!--   
+      
+        1、文件格式：<artifactId>-<version>-<id>.zip  
+          
+        1.1 <artifactId> 在 pom.xml 文件中又叫 项目名或模块名   
+        1.2 <version> 也存在 pom.xml 文件中本版号  
+        1.3 <id> 就存在文件中，  
+      
+     -->  
+    <id>bin</id>  
+      
+    <!--   
+      
+        2、输出的后缀名  
+      
+            一般使用的有 jar、zip、tar.gz、tar.bz2   
+            这里的格式名，是为了 适应不能操作系统所准备    
+          
+     -->  
+    <formats>  
+        <format>tar</format>  
+        <format>zip</format>
+    </formats>  
+  
+    <!--   
+      
+        3、导出项目依赖  
+          
+        3.1 将项目依赖导出成  jar   
+              
+            主要设置  unpack : false , 如果设置成  true   
+            导出的依赖文件则为 class  
+      
+        3.2 导出项目依赖文件输出到目录  
+              
+            默认根目录，如果想出到  lib 目录或  ext   
+          
+     -->  
+    <dependencySets>  
+        <dependencySet>  
+            <unpack>false</unpack>  
+            <scope>runtime</scope>  
+            <outputDirectory>/lib</outputDirectory>  
+        </dependencySet>
+    </dependencySets>  
+  
+      
+    <!--   
+      
+        4、文件或文件夹设置  
+          
+        4.1 输出文件    
+          
+            本项目基本只有公司内部几个人开发，  
+            主要输出的文件有两类，1、说明文档。2、运行文件 。3、依赖文件  
+      
+        4.2 输出文件夹  
+          
+            输出的文件夹主要是根据你的项目来定。  
+            本项系统主要是打包 web 服务器所以要配置的 目录有  
+            1、web项目文件夹 、如 webapps  
+            2、工作文件夹、如 work   
+            
+            
+        4.3 注意事项  
+          
+            1、设置输入文件夹  
+              
+            <outputDirectory> 主要  
+              
+            2、设置文件夹不排除输出  
+              
+            <useDefaultExcludes>true</useDefaultExcludes>  
+              
+            3、项目文件夹设置  
+              
+            <directory>  
+              
+            这里说明一下，  
+            ${project.basedir}  项目下的文件夹  
+            ${project.build.directory} 项目编译后的目录  
+     -->  
+    <fileSets>  
+        <fileSet>  
+            <directory>${project.basedir}</directory>  
+            <outputDirectory>/</outputDirectory>  
+            <includes>  
+                <include>README*</include>  
+                <include>LICENSE*</include>  
+                <include>NOTICE*</include>  
+            </includes>  
+        </fileSet>  
+       <fileSet>  
+            <!-- jdk -->
+            <directory>${project.basedir}/src/main/jdk</directory>  
+            <outputDirectory>/jdk</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>  
+        </fileSet>
+        <fileSet>  
+            <!-- excel result -->
+            <directory>${project.basedir}/src/main/result</directory>  
+            <outputDirectory>/result</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>  
+        </fileSet>
+        <fileSet>  
+            <!-- 项目输入目录 -->  
+            <directory>${project.build.directory}</directory>  
+            <outputDirectory>/</outputDirectory>  
+            <includes>  
+                <include>*.jar</include>  
+            </includes>  
+        </fileSet>  
+        <fileSet>  
+            <directory>${project.basedir}/webapps</directory>  
+            <useDefaultExcludes>true</useDefaultExcludes>  
+        </fileSet>  
+        <fileSet>  
+            <directory>${project.basedir}/work</directory>  
+            <useDefaultExcludes>true</useDefaultExcludes>  
+        </fileSet>  
+        <fileSet>  
+            <directory>${project.basedir}/src/main/bin</directory>  
+            <outputDirectory>/</outputDirectory>  
+            <includes>  
+                <include>start.*</include>  
+            </includes>  
+            <useDefaultExcludes>true</useDefaultExcludes>  
+        </fileSet>  
+    </fileSets>  
+  
+  
+</assembly>
