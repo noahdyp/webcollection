@@ -15,7 +15,7 @@ import per.dyp.webcollection.QiuTanExporter.Match;
 
 public class QiuTanCollector implements Collector {
 
-    private static final String BFDATA_URL = "http://bf.win007.com/vbsxml/bfdata.js";
+    private static final String BFDATA_URL = "http://bf.titan007.com/vbsxml/bfdata.js";
 
     // http://1x2.nowscore.com/1292139.js
     private static final String MATCH_URL_FORMAT = "http://1x2.nowscore.com/%d.js";
